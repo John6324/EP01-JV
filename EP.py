@@ -13,7 +13,8 @@ with open ("Biblioteca_oficial.json", "r") as arquivo:
     Estoque=json.loads(arquivo.read())
 
 opcoes=["\nControle de estoque", "0 - sair", "1 - adicionar item", "2 - remover item",\
-        "3 - alterar item", "4 - imprimir estoque"]
+        "3 - alterar item (quantidade ou valor)", "4 - imprimir estoque",\
+        "5 - imprimir saldo total do estoque"]
 
 for i in opcoes:
     print(i)
@@ -29,13 +30,10 @@ while acao != "0":
         if produto not in estoque:
             quantidade = int(input("Quantidade inicial: "))
             valor = float(input("Valor: "))
-            while quantidade < 0:
-                print ("A quantidade inicial não pode ser negativa.")
-                quantidade = int(input("Quantidade inicial: "))
             while valor < 0:
                 print (" O valor não pode ser negativo.")
                 valor = float(input("Valor: "))
-            if quantidade > 0:
+            if valor > 0:
                 quantidade_produto={}
                 quantidade_produto['Quantidade']=quantidade
                 quantidade_produto['Valor']=valor
@@ -44,7 +42,7 @@ while acao != "0":
                     print(i)
                 acao = input ('Faça sua escolha: ')
         else:
-            print("Produto ja cadastrado")
+            print("Produto já cadastrado")
             for i in opcoes:
                 print(i)
             acao = input ('Faça sua escolha: ')
@@ -65,15 +63,15 @@ while acao != "0":
     if acao == '3':
         alterar = input ('Nome do produto: ')
         if alterar in estoque:
-            quantidade=int(input('Quantidade: '))
-            valor=float(input('Valor: '))
+            quantidade=int(input('Quantidade a ser alterada: '))
+            valor=float(input('Valor a ser alterada: '))
             estoque[alterar]['Quantidade'] += quantidade
             estoque[alterar]['Valor'] += valor
             for i in opcoes:
                 print(i)
             acao = input ('Faça sua escolha: ')
         else:
-            print("Elemento nao encontrado.")
+            print("Elemento não encontrado.")
             for i in opcoes:
                 print(i)
             acao = input ('Faça sua escolha: ')
@@ -85,7 +83,15 @@ while acao != "0":
             print(i)
         acao = input ('Faça sua escolha: ')
 
-
+    if acao == "5":
+        valor_total=0
+        for produto in estoque:
+            valor=estoque[produto]["Quantidade"]*estoque[produto]["Valor"]
+            valor_total+=valor
+        print("Saldo total do estoque é R${0}".format(valor_total))
+        for i in opcoes:
+            print(i)
+        acao = input ('Faça sua escolha: ')
 
 print("Até mais")
 
