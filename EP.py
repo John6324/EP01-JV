@@ -1,25 +1,20 @@
-﻿# -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 25 11:00:17 2018
+﻿from firebase import firebase
 
-@author: Victor Habib
-"""
+firebase=firebase.FirebaseApplication('https://ep01-acf3b.firebaseio.com/', None)
 
-import json
+lojas=firebase.get('/Lojas', None)
 
-with open ("Biblioteca_oficial.json", "r") as arquivo:
-    lojas=json.loads(arquivo.read())
-    
+if lojas == None:
+    lojas={}
 
-
-opcoes = ["\nControle de estoque", "0 - voltar ao controle de lojas",\
-        "1 - adicionar item", "2 - remover item",\
-        "3 - alterar item (quantidade ou valor)", "4 - imprimir estoque",\
-        "5 - imprimir saldo total do estoque"]
+opcoes = ["\nControle do estoque", "0 - Voltar ao controle de lojas",\
+        "1 - Adicionar item", "2 - Remover item",\
+        "3 - Alterar item (Quantidade ou Valor)", "4 - Imprimir estoque",\
+        "5 - Imprimir saldo total do estoque"]
 
 
-controle_de_lojas = ["\nControle de loja", "0 - sair", "1 - adicionar loja", \
-                    "2 - editar estoque da loja", "3 - remover loja", "4 - imprimir lojas existentes"]
+controle_de_lojas = ["\nControle de loja", "0 - Sair", "1 - Adicionar loja", \
+                    "2 - Editar estoque da loja", "3 - Remover loja", "4 - Imprimir lojas cadastradas"]
 
 for i in controle_de_lojas:
     print(i)
@@ -32,7 +27,7 @@ while opcao != "0":
     if opcao == "1":
         loja = input("Escreva o nome da loja: ")
         if loja in lojas:
-            print("Loja já cadastrada")
+            print("Loja já cadastrada.")
             for i in controle_de_lojas:
                 print(i)
             opcao = input("O que deseja fazer? ")
@@ -59,7 +54,7 @@ while opcao != "0":
                         
                         quantidade = int(input("Quantidade inicial: "))
                         while quantidade < 0:
-                            print("A quantidade não pode ser negativa")
+                            print("A quantidade não pode ser negativa.")
                             quantidade = int(input("Quantidade inicial: "))
                         lojas[loja][produto]["Quantidade"]=quantidade
                         
@@ -73,7 +68,7 @@ while opcao != "0":
                             print(i)
                         acao = input ('Faça sua escolha: ')
                     else:
-                        print("Produto já cadastrado")
+                        print("Produto já cadastrado.")
                         for i in opcoes:
                             print(i)
                         acao = input ('Faça sua escolha: ')
@@ -94,7 +89,7 @@ while opcao != "0":
                 if acao == '3':
                     produto = input ('Nome do produto: ')
                     if produto in lojas[loja]:
-                        quantidade=int(input('Quantidade a somar : '))
+                        quantidade=int(input('Quantidade a somar: '))
                         valor=float(input('Valor novo: '))
                         lojas[loja][produto]['Quantidade'] += quantidade
                         while valor < 0:
@@ -137,7 +132,7 @@ while opcao != "0":
         if loja in lojas:
             del lojas[loja]
         else:
-            print("Loja não cadastrada")
+            print("Loja não cadastrada.")
         for i in controle_de_lojas:
             print(i)
         opcao = input("O que deseja fazer? ")
@@ -145,13 +140,10 @@ while opcao != "0":
     elif opcao == "4":
         for loja in lojas:
             print(loja)
-        if loja not in lojas:
-            print("Não há lojas cadastradas.")
         for i in controle_de_lojas:
             print(i)
         opcao = input("O que deseja fazer? ")        
             
 print("Até mais")
 
-with open ("Biblioteca_oficial.json", "w") as arquivo:
-    arquivo.write(json.dumps(lojas, sort_keys=True, indent=4))
+lojas=firebase.patch('/Lojas',lojas)
